@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio - Renzella Giuliana</title>
+    <!-- Loading Tailwind CSS and Font Awesome for styling and icons -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Importing 'Montserrat' and 'Inter' fonts */
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=Inter:wght@400;500;600;700&display=swap');
+
+        /* Defining a new BRIGHT color palette: blue, orange, and yellow */
+        :root {
+            --color-primary: #FF8C00; /* Vibrant orange for vitality and accent */
+            --color-secondary: #00A2FF; /* Bright blue for professionalism and titles */
+            --color-accent: #FFD700; /* Bright yellow for highlights */
+            --color-bg-light: #F8F7F4; /* Neutral background, remains warm and welcoming */
+            --color-bg-card: #FFFFFF; /* Pure white for cards */
+            --color-text-dark: #333333; /* Dark gray for main text */
+            --color-text-light: #5a5a5a; /* Lighter gray for secondary text */
+        }
+
+        /* Basic body styles */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--color-bg-light);
+            color: var(--color-text-dark);
+            overflow-x: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            padding: 1.5rem;
+        }
+
+        /* Main container with a softer, more defined shadow */
+        .main-container {
+            background-color: #FFFFFF;
+            border-radius: 1.5rem;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.07);
+            max-width: 1000px;
+            width: 100%;
+            border: 1px solid #e5e5e5;
+        }
+
+        /* Section titles with a more elegant design */
+        .section-title {
+            font-family: 'Montserrat', sans-serif;
+            color: var(--color-secondary);
+            font-size: 1.8rem; /* Slightly reduced for a more refined look */
+            font-weight: 800;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--color-primary);
+            display: inline-block; /* To make the border fit the text length */
+        }
+
+        /* Style for small icons in sections */
+        .icon-small {
+            font-size: 1.5rem;
+            color: var(--color-primary);
+            width: 40px; /* Fixed width for alignment */
+            text-align: center;
+        }
+        
+        /* Icon container for the "Method in Action" section */
+        .art-icon-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100px;
+            width: 100px;
+            background-color: var(--color-bg-light);
+            border-radius: 1rem;
+            margin-bottom: 1rem;
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 1px solid #eee;
+        }
+
+        .art-icon-container i {
+            font-size: 2.5rem;
+            color: var(--color-primary);
+        }
+
+        /* General card style, cleaner with delicate shadows */
+        .card {
+            border-radius: 1rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.04);
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+            background-color: var(--color-bg-card);
+            border: 1px solid #f0f0f0;
+        }
+
+        /* Subtler hover effect */
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.06);
+        }
+
+        /* Style for bulleted lists with custom marker */
+        .list-disc-custom li::marker {
+            color: var(--color-primary);
+        }
+
+        /* Specific style for the game, integrated with the new palette */
+        .game-section {
+            background-color: #f0f2f5; /* A very light gray-blue */
+            color: var(--color-text-dark);
+            border-radius: 1.5rem;
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+
+        #game-board {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            perspective: 1000px;
+            margin: 0 auto;
+            max-width: 500px;
+        }
+
+        .card-game {
+            width: 100%;
+            height: 100px;
+            border-radius: 0.75rem;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s cubic-bezier(0.3, 1.2, 0.7, 1.2); /* More elastic transition */
+            cursor: pointer;
+        }
+        
+        .card-game.flipped {
+            transform: rotateY(180deg);
+        }
+        
+        .card-game.matched {
+            pointer-events: none;
+            opacity: 0.6;
+            transform: scale(0.95); /* Shrinking effect for matched cards */
+        }
+
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 0.75rem;
+            text-align: center;
+            padding: 0.5rem;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+        
+        .card-front {
+            background-color: var(--color-accent);
+            color: var(--color-secondary);
+            transform: rotateY(180deg);
+            flex-direction: column;
+        }
+
+        .card-back {
+            background-color: var(--color-primary);
+        }
+        
+        .card-back i {
+            color: white;
+            font-size: 2.5rem;
+        }
+
+        .game-title {
+            color: var(--color-secondary);
+            margin-bottom: 1rem;
+            font-size: 2rem;
+            font-weight: bold;
+            font-family: 'Montserrat', sans-serif;
+        }
+        
+        .game-text {
+             color: var(--color-text-light);
+             font-size: 1rem;
+        }
+        .info-text {
+            font-size: 0.75rem;
+            color: #6b7280;
+            margin-top: 0.5rem;
+            text-align: center;
+        }
+        .game-buttons {
+            display: flex;
+            justify-content: center;
+            margin-top: 1.5rem;
+        }
+        .game-button {
+            padding: 0.75rem 2rem;
+            font-size: 1rem;
+            font-weight: 600;
+            color: white;
+            background-color: var(--color-secondary);
+            border-radius: 9999px;
+            transition: background-color 0.3s, transform 0.2s;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 162, 255, 0.2); /* Shadow with the new blue color */
+            border: none;
+        }
+        .game-button:hover {
+            background-color: #008cd6; /* Darker version of secondary color */
+            transform: translateY(-2px);
+        }
+
+        #game-message {
+            margin-top: 1rem;
+            min-height: 2rem;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--color-primary);
+        }
+        
+        /* Style for game loading */
+        .loading-message {
+            text-align: center;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--color-secondary);
+            height: 200px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Style for the "Eco d'Arte" section */
+        .quote-section {
+            background-color: var(--color-secondary);
+            color: white;
+            border-left: 5px solid var(--color-primary);
+            border-radius: 1rem;
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+        .quote-section h3 {
+            font-family: 'Montserrat', sans-serif;
+            color: var(--color-accent);
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .quote-section p {
+            font-size: 1.1rem;
+            line-height: 1.7;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+    <!-- Main container centered and responsive -->
+    <div class="main-container mx-auto p-6 md:p-12 my-8">
+
+        <!-- Header and Title -->
+        <header class="text-center mb-12">
+            <h1 class="text-4xl md:text-5xl font-extrabold text-gray-800 mb-2" style="color: var(--color-secondary);">Professional Portfolio</h1>
+            <h2 class="text-xl md:text-2xl font-semibold" style="color: var(--color-primary);">Renzella Giuliana</h2>
+        </header>
+
+        <!-- "The Unique Method" Section -->
+        <section class="mb-12">
+            <h3 class="section-title mb-6">The Unique Method</h3>
+            <p class="text-base md:text-lg mb-3 leading-relaxed" style="color: var(--color-text-light);">
+                Art is not merely an object of contemplation, but the most powerful and universal language that allows us to face any challenge in daily and professional life. Its true magic is that, while we talk about work or relationships through it, we are indirectly nourishing our humanity.
+            </p>
+        </section>
+
+        <!-- "About Me" Section -->
+        <section class="mb-12">
+            <h3 class="section-title mb-6">About Me</h3>
+            <div class="space-y-4 text-base leading-relaxed" style="color: var(--color-text-light);">
+                <p>Art History Teacher with specialization in support activities and a Master's in Gestalt Counseling.</p>
+                <!-- New phrase added to describe the mentor/orientator role -->
+                <p>Teacher, mentor, and orientator: I use the language of art to cultivate not only knowledge, but also the life skills of my students.</p>
+                <p>University lecturer at Roma Tre for the training of support teachers, with consolidated experience in the design and delivery of inclusive educational programs.</p>
+                <p>My uniqueness: I combine academic skills in Art History, counseling training, and a deep professional experience, working with each person in their authenticity, regardless of how they explore, feel, think, and live the world.</p>
+            </div>
+        </section>
+        
+        <!-- "Training and Validation" Section -->
+        <section class="mb-12">
+            <h3 class="section-title mb-6">Training and Validation</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-base">
+                <div class="card p-6 flex items-start space-x-4">
+                    <i class="fa-solid fa-book-open-reader icon-small mt-1"></i>
+                    <div>
+                        <strong class="font-semibold block mb-1" style="color: var(--color-secondary);">Specialized Training:</strong>
+                        <p style="color: var(--color-text-light);">Teacher specialized in pedagogy, didactics, psychology of learning and educational support for students with disabilities, with a Master's in Gestalt Counseling.</p>
+                    </div>
+                </div>
+                <div class="card p-6 flex items-start space-x-4">
+                    <i class="fa-solid fa-award icon-small mt-1"></i>
+                    <div>
+                        <strong class="font-semibold block mb-1" style="color: var(--color-secondary);">Academic Recognitions:</strong>
+                        <!-- Text updated as requested by the user -->
+                        <p style="color: var(--color-text-light);">Methodology developed and tested in 5 years of university training held at Roma Tre.</p>
+                        <p style="color: var(--color-text-light);">Approach validated through the training of over 500 specialized teachers.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- "My Method in Action" Section with icons -->
+        <section class="mb-12">
+            <h3 class="section-title mb-6">My Method in Action</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="card p-4 flex flex-col items-center text-center">
+                    <div class="art-icon-container">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    </div>
+                    <div class="p-2">
+                        <p class="text-sm md:text-base mb-1"><strong class="font-semibold" style="color: var(--color-secondary);">Friedrich's Wanderer:</strong></p>
+                        <p class="text-sm" style="color: var(--color-text-light);">becomes a reflection on imagination, helping to overcome resistance and unlock new solutions.</p>
+                    </div>
+                </div>
+                <div class="card p-4 flex flex-col items-center text-center">
+                    <div class="art-icon-container">
+                        <i class="fa-solid fa-bullseye"></i>
+                    </div>
+                    <div class="p-2">
+                        <p class="text-sm md:text-base mb-1"><strong class="font-semibold" style="color: var(--color-secondary);">Michelangelo's David:</strong></p>
+                        <p class="text-sm" style="color: var(--color-text-light);">asks direct questions about one's personal and/or professional goals.</p>
+                    </div>
+                </div>
+                <div class="card p-4 flex flex-col items-center text-center">
+                    <div class="art-icon-container">
+                        <i class="fa-solid fa-hand-holding-heart"></i>
+                    </div>
+                    <div class="p-2">
+                        <p class="text-sm md:text-base mb-1"><strong class="font-semibold" style="color: var(--color-secondary);">Leonardo's Saint Anne:</strong></p>
+                        <p class="text-sm" style="color: var(--color-text-light);">becomes a mirror of our "movements of the soul," revealing the complexity of emotions.</p>
+                    </div>
+                </div>
+                <div class="card p-4 flex flex-col items-center text-center">
+                    <div class="art-icon-container">
+                        <i class="fa-solid fa-seedling"></i>
+                    </div>
+                    <div class="p-2">
+                        <p class="text-sm md:text-base mb-1"><strong class="font-semibold" style="color: var(--color-secondary);">Van Gogh's The Sower:</strong></p>
+                        <p class="text-sm" style="color: var(--color-text-light);">becomes a tool for concretely planning the future, cultivating motivations and strengths.</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Phrase added as requested by the user -->
+            <p class="text-center mt-6 text-sm" style="color: var(--color-text-light);">
+                For a more detailed description of my approach, you can consult my publications, with links available in my CV and on my LinkedIn profile.
+            </p>
+        </section>
+
+        <!-- "Sectors of Application" Section -->
+        <section class="mb-12">
+            <h3 class="section-title mb-6">Sectors of Application</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-base">
+                <div class="p-6 card">
+                    <h4 class="font-bold mb-3 text-lg" style="color: var(--color-secondary);">🏛️ MUSEUMS AND CULTURAL INSTITUTIONS</h4>
+                    <ul class="list-disc-custom list-inside space-y-2 text-sm" style="color: var(--color-text-light);">
+                        <li>Staff and tourist guide training</li>
+                        <li>Development of innovative educational programs</li>
+                        <li>Workshops for different audiences</li>
+                        <li>Cultural accessibility projects</li>
+                    </ul>
+                </div>
+                <div class="p-6 card">
+                    <h4 class="font-bold mb-3 text-lg" style="color: var(--color-secondary);">🏢 CORPORATE TRAINING</h4>
+                    <ul class="list-disc-custom list-inside space-y-2 text-sm" style="color: var(--color-text-light);">
+                        <li>Leadership development & Team building</li>
+                        <li>Change management & Communication</li>
+                        <li>Diversity & inclusion</li>
+                    </ul>
+                </div>
+                <div class="p-6 card">
+                    <h4 class="font-bold mb-3 text-lg" style="color: var(--color-secondary);">🎓 EDUCATION AND TRAINING</h4>
+                    <ul class="list-disc-custom list-inside space-y-2 text-sm" style="color: var(--color-text-light);">
+                        <li>Courses for teachers and educators</li>
+                        <li>Innovative teaching methodologies</li>
+                        <li>Training on inclusivity and UDL</li>
+                    </ul>
+                </div>
+                <div class="p-6 card">
+                    <h4 class="font-bold mb-3 text-lg" style="color: var(--color-secondary);">📱 CONTENT CREATION AND DIGITAL</h4>
+                    <ul class="list-disc-custom list-inside space-y-2 text-sm" style="color: var(--color-text-light);">
+                        <li>Workshops for content creators</li>
+                        <li>Storytelling through art</li>
+                        <li>Authentic personal branding</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- "The Results" Section -->
+        <section class="mb-12">
+            <h3 class="section-title mb-6">The Results</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-base">
+                <div class="p-6 bg-gray-50 rounded-lg border">
+                    <h4 class="font-bold text-lg mb-3" style="color: var(--color-secondary);">Practical Solutions:</h4>
+                    <ul class="list-disc-custom list-inside space-y-2 text-sm" style="color: var(--color-text-light);">
+                        <li>Clarity on objectives</li>
+                        <li>Communication strategies</li>
+                        <li>Tools for emotional management and leadership</li>
+                    </ul>
+                </div>
+                <div class="p-6 bg-gray-50 rounded-lg border">
+                    <h4 class="font-bold text-lg mb-3" style="color: var(--color-secondary);">Profound Transformation:</h4>
+                    <ul class="list-disc-custom list-inside space-y-2 text-sm" style="color: var(--color-text-light);">
+                        <li>Greater self-awareness</li>
+                        <li>Emotional competence and creativity</li>
+                        <li>Aesthetic sensitivity that enriches for a lifetime</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        
+        <!-- MEMORY GAME SECTION -->
+        <section class="game-section mb-12">
+            <div class="text-center mb-6">
+                <h1 class="game-title">Art Memory</h1>
+                <p class="game-text">
+                    Test your memory and knowledge of art. Match the pairs to win!
+                </p>
+            </div>
+            <div id="game-container" class="relative">
+                <div id="loading-message" class="loading-message">Loading game...</div>
+                <div id="game-board" class="hidden"></div>
+            </div>
+            
+            <div id="game-message" class="text-center"></div>
+            <div class="game-buttons">
+                <button id="restart-button" class="game-button hidden">Restart</button>
+            </div>
+            <!-- The sentence has been moved here, under the buttons -->
+            <p class="info-text">This game is just a small example: I have many other creative ideas to bring people closer to art.</p>
+        </section>
+
+        <!-- "Echo of Art" Section -->
+        <section class="quote-section">
+            <h3>Echo of Art:</h3>
+            <p>
+                Art has the power to completely transform us: it can overwhelm us with its power, elevate us beyond daily life, and purify us from the tensions of life, revealing hidden parts of ourselves.
+            </p>
+        </section>
+    </div>
+
+    <script>
+        // Helper functions to show/hide elements
+        const showElement = (element) => element.classList.remove('hidden');
+        const hideElement = (element) => element.classList.add('hidden');
+
+        // ******************** LOGIC FOR THE MEMORY GAME ********************
+        const gameBoard = document.getElementById('game-board');
+        const gameMessage = document.getElementById('game-message');
+        const restartButton = document.getElementById('restart-button');
+        const loadingMessage = document.getElementById('loading-message');
+        
+        // Array of art pieces for the game, with icons and descriptions
+        const artPieces = [
+            { id: 1, name: "Mona Lisa", icon: "fa-solid fa-gem" },
+            { id: 2, name: "Starry Night", icon: "fa-solid fa-star" },
+            { id: 3, name: "The Kiss", icon: "fa-solid fa-heart" },
+            { id: 4, name: "The Creation of Adam", icon: "fa-solid fa-hand-point-up" },
+            { id: 5, name: "Guernica", icon: "fa-solid fa-dove" },
+            { id: 6, name: "The Scream", icon: "fa-solid fa-face-surprise" },
+            { id: 7, name: "Girl with a Pearl Earring", icon: "fa-solid fa-user-secret" },
+            { id: 8, name: "The Persistence of Memory", icon: "fa-solid fa-clock" }
+        ];
+
+        let firstCard = null;
+        let secondCard = null;
+        let lockBoard = false;
+        let matchedPairs = 0;
+
+        // Shuffle the card array
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        // Create the card elements and add them to the game board
+        function createCards() {
+            gameBoard.innerHTML = '';
+            const shuffledCards = shuffle([...artPieces, ...artPieces]);
+            
+            shuffledCards.forEach((cardData) => {
+                const card = document.createElement('div');
+                card.classList.add('card-game');
+                card.dataset.id = cardData.id;
+
+                card.innerHTML = `
+                    <div class="card-face card-front">
+                        <i class="${cardData.icon} text-3xl mb-1"></i>
+                        <p class="text-xs font-semibold text-center leading-tight">${cardData.name}</p>
+                    </div>
+                    <div class="card-face card-back">
+                        <i class="fa-solid fa-palette"></i>
+                    </div>
+                `;
+                gameBoard.appendChild(card);
+                card.addEventListener('click', flipCard);
+            });
+        }
+
+        // Function to flip a card
+        function flipCard() {
+            if (lockBoard || this === firstCard || this.classList.contains('matched')) return;
+
+            this.classList.add('flipped');
+            gameMessage.textContent = '';
+
+            if (!firstCard) {
+                firstCard = this;
+                return;
+            }
+
+            secondCard = this;
+            lockBoard = true;
+            checkForMatch();
+        }
+
+        // Function to check if the cards match
+        function checkForMatch() {
+            const isMatch = firstCard.dataset.id === secondCard.dataset.id;
+            isMatch ? disableCards() : unflipCards();
+        }
+
+        // Disable cards that have been matched
+        function disableCards() {
+            firstCard.classList.add('matched');
+            secondCard.classList.add('matched');
+            matchedPairs++;
+            if (matchedPairs < artPieces.length) {
+                gameMessage.textContent = "Match found! ✨";
+            }
+            resetBoard();
+            checkForWin();
+        }
+
+        // Flip back cards if they are not a match
+        function unflipCards() {
+            gameMessage.textContent = "Try again... 🎨";
+            setTimeout(() => {
+                firstCard.classList.remove('flipped');
+                secondCard.classList.remove('flipped');
+                resetBoard();
+            }, 1200);
+        }
+
+        // Reset the game state after a turn
+        function resetBoard() {
+            [firstCard, secondCard, lockBoard] = [null, null, false];
+        }
+
+        // Check if the game is over
+        function checkForWin() {
+            if (matchedPairs === artPieces.length) {
+                gameMessage.textContent = "Congratulations, you won! 🎉";
+            }
+        }
+
+        // Function to restart the game
+        function restartGame() {
+            matchedPairs = 0;
+            resetBoard();
+            gameMessage.textContent = '';
+            createCards();
+        }
+
+        // Initialize the game on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            hideElement(gameBoard);
+            hideElement(restartButton);
+            showElement(loadingMessage);
+
+            setTimeout(() => {
+                restartGame();
+                hideElement(loadingMessage);
+                showElement(gameBoard);
+                showElement(restartButton);
+            }, 1000);
+        });
+
+        restartButton.addEventListener('click', restartGame);
+    </script>
+</body>
+</html>
